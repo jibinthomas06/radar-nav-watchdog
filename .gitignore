@@ -1,0 +1,35 @@
+﻿# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# ---- OS / Editor ----
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ---- Logs / outputs ----
+logs/
+*.log
+runs/
+outputs/
+reports/
+
+# ---- Dataset (keep OUT of git) ----
+data/**
+!data/.gitkeep
+
+# Big archives / artifacts
+*.zip
+*.tar
+*.gz
+*.7z
+*.rar
+*.bag
+*.bin
+*.pcd
+*.npy
+*.npz
