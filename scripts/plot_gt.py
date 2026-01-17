@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import math
+import os
 import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -24,7 +25,6 @@ def main() -> None:
     if not gt_path.exists():
         raise SystemExit(f'Missing: {gt_path}')
 
-    # Read CSV (header may or may not exist)
     try:
         df = pd.read_csv(gt_path)
     except Exception:
@@ -69,12 +69,27 @@ def main() -> None:
         xs.append(x)
         ys.append(y)
 
+    # Simple summary stats
+    dist = 0.0
+    for i in range(1, len(xs)):
+        dist += math.hypot(xs[i] - xs[i - 1], ys[i] - ys[i - 1])
+
+    print(f"Steps: {len(xs)-1}")
+    print(f"Approx path length: {dist:.1f} m")
+    print(f"Final position: x={xs[-1]:.2f} m, y={ys[-1]:.2f} m")
+
     plt.figure()
     plt.plot(xs, ys)
     plt.axis('equal')
     plt.title(f'GT radar odometry trajectory: {trav.name}')
     plt.xlabel('x [m]')
     plt.ylabel('y [m]')
+
+    os.makedirs('outputs', exist_ok=True)
+    out_path = Path('outputs/gt_trajectory.png')
+    plt.savefig(out_path, dpi=150)
+    print(f"Saved plot to: {out_path}")
+
     plt.show()
 
 if __name__ == '__main__':
