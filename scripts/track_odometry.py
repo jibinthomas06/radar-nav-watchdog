@@ -9,7 +9,8 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from radar_nav.track_odometry import TrackParams, track_step
+from radar_nav.track_odometry import TrackParams
+from radar_nav.tracker import RadarTracker
 
 
 def load_cfg() -> dict:
@@ -166,13 +167,16 @@ def main() -> None:
         max_range_m=80.0,
         highpass_blur=9,
     )
+    tracker = RadarTracker(p)
 
     est_deltas = []
     gt_deltas = []
     confs = []
 
     for a, b in zip(pngs[:-1], pngs[1:]):
-        dx, dy, dyaw, conf = track_step(a, b, p)
+        res = tracker.step(a, b)
+        dx, dy, dyaw, conf = res.dx, res.dy, res.dyaw, res.conf
+
         est_deltas.append((dx, dy, dyaw))
         confs.append(conf)
 
